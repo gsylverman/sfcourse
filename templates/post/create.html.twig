@@ -2,4 +2,7 @@
 
 {% block body %}
     {{ form(form) }}
+    {% for error in errors %}
+        <span>{{ error }}</span>
+    {% endfor %}
 {% endblock %}

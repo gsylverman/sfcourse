@@ -43,7 +43,9 @@ class PostController extends AbstractController
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
-        if($form->isSubmitted()){
+        $errors = $form->getErrors();
+
+        if($form->isSubmitted() && $form->isValid()){
             dump($post);
             $this->em->persist($post);
             $this->em->flush();
@@ -52,7 +54,8 @@ class PostController extends AbstractController
         }
 
         return $this->render('post/create.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'errors' => $errors
         ]);
     }
 
