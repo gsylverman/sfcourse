@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Post;
+use App\Form\PostType;
 use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
@@ -36,14 +37,23 @@ class PostController extends AbstractController
     /**
      * @Route("/create", name="create")
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
         $post = new Post();
-        $post->setTitle('This is going to be post title');
-        $this->em->persist($post);
-        $this->em->flush();
+        $form = $this->createForm(PostType::class, $post);
+        $form->handleRequest($request);
 
-        return new Response('Post was created');
+        if($form->isSubmitted()){
+            dump($post);
+            $this->em->persist($post);
+            $this->em->flush();
+
+            return $this->redirect($this->generateUrl('post.index'));
+        }
+
+        return $this->render('post/create.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
