@@ -15,7 +15,6 @@ class MainController extends AbstractController
      */
     public function index(): Response
     {
-        phpinfo();
         return $this->render('home/index.html.twig');
     }
 
