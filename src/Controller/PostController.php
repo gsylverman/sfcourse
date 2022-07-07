@@ -8,6 +8,7 @@ use App\Repository\PostRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,14 +40,29 @@ class PostController extends AbstractController
      */
     public function create(Request $request): Response
     {
+
         $post = new Post();
         $form = $this->createForm(PostType::class, $post);
         $form->handleRequest($request);
 
         if($form->isSubmitted() && $form->isValid()){
-            dump($post);
-            $this->em->persist($post);
-            $this->em->flush();
+
+            /**
+             * @var UploadedFile  $file
+             */
+            $file = $request->files->get('post')['attachment'];
+            if($file){
+                $filename = md5(uniqid()) . '.' . $file->guessClientExtension();
+
+                $file->move(
+                    $this->getParameter('uploads_dir'),
+                    $filename
+                );
+                $post->setImage($filename);
+
+                $this->em->persist($post);
+                $this->em->flush();
+            }
 
             return $this->redirect($this->generateUrl('post.index'));
         }
