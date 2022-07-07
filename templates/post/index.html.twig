@@ -8,6 +8,7 @@
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Title</th>
+            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -18,6 +19,11 @@
                 <td>
                     <a href="{{ path('post.show', {id: post.id}) }}">
                         {{ post.title }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('post.remove', {id: post.id}) }}">
+                        <button type="button" class="btn btn-danger">Delete</button>
                     </a>
                 </td>
             </tr>

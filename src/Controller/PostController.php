@@ -66,6 +66,6 @@ class PostController extends AbstractController
         $this->em->remove($post);
         $this->em->flush();
 
-        return $this->render('post/remove.html.twig');
+        return $this->redirect($this->generateUrl('post.index'));
     }
 }
